@@ -36,6 +36,7 @@ def login():
     try:
         row = check_user(username).fetchall()[0]
     except:
+        # row = check_user(username).fetchall()[0]
         return {"message": "Wrong username or password"}, 401
     
     if check_password_hash(row['KataSandi'], password):

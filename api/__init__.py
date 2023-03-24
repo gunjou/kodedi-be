@@ -16,3 +16,5 @@ from api.auth import auth_bp
 api.register_blueprint(auth_bp, name='auth')
 from api.profile import profile_bp
 api.register_blueprint(profile_bp, name='profile')
+from api.pasien import pasien_bp
+api.register_blueprint(pasien_bp, name='pasien')
