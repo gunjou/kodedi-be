@@ -31,6 +31,12 @@ def get_list_patient():
     )
     return result
 
+# def get_no_verif():
+#     result = engine.execute(
+#         text(f"""SELECT NoVerifikasi FROM Pasien_M WHERE = '230320%';""")
+#     )
+#     return result
+
 def get_no_cm():
     result = engine.execute(
         text(f"""SELECT NoCM FROM Pasien_M;""")

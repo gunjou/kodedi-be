@@ -10,8 +10,12 @@ pasien_bp = Blueprint('api', __name__)
 
 def get_age(birthdate):
     today = date.today()
-    age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
-    return age
+    # age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
+    ages = today - birthdate
+    years = ages.days / 365.242
+    months = (years - int(years)) * 12
+    days = (months - int(months)) * (365.242/12)
+    return f"{int(years)}%{int(months)}%{int(days)}"
 
 @pasien_bp.route('/pasien/list', methods=['GET'])
 @jwt_required()
@@ -22,7 +26,9 @@ def list_pasien():
             'no_cm': i['NoCM'],
             'fullname': i['NamaLengkap'],
             'gender': 'L' if i['KdJenisKelamin'] == 1 else 'P',
-            'age': get_age(i['TglLahir']),
+            'age_y': get_age(i['TglLahir']).split('%')[0],
+            'age_m': get_age(i['TglLahir']).split('%')[1],
+            'age_d': get_age(i['TglLahir']).split('%')[2],
             'status': i['StatusEnabled'],
         } for i in data]
     return result

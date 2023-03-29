@@ -18,3 +18,5 @@ from api.profile import profile_bp
 api.register_blueprint(profile_bp, name='profile')
 from api.pasien import pasien_bp
 api.register_blueprint(pasien_bp, name='pasien')
+from api.master import master_bp
+api.register_blueprint(master_bp, name='master')
