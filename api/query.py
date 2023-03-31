@@ -48,3 +48,35 @@ def query_add_pasien(KdProfile, NoCM, KdTitle, NamaLengkap, NamaKeluarga, NamaPa
         text(f"""INSERT INTO Pasien_M  (KdProfile, NoCM, KdTitle, NamaLengkap, NamaKeluarga, NamaPanggilan, NamaDepan, NamaTengah, NamaBelakang, KdJenisKelamin, TglLahir, KdNegara, StatusEnabled, NoVerifikasi, NoRec)
                 VALUES ({KdProfile}, '{NoCM}', {KdTitle}, '{NamaLengkap}', '{NamaKeluarga}', '{NamaPanggilan}', '{NamaDepan}', '{NamaTengah}', '{NamaBelakang}', {KdJenisKelamin}, '{TglLahir}', {KdNegara}, {StatusEnabled}, {NoVerifikasi}, '{NoRec}');""")
     )
+
+def get_no_periksa():
+    result = engine.execute(text(f'SELECT NoHasilPeriksa FROM HasilPemeriksaan_T;'))
+    return result
+
+def get_master_komponen_anamnesis(KdKomponen):
+    result = engine.execute(
+        text(f"""SELECT NamaKomponenHasil FROM KomponenHasil_M WHERE KdKomponenHasil = {KdKomponen};""")
+    )
+    return result
+
+def query_add_komponen_anamnesis(KdProfile, NoHasilPeriksa, NoCM, TglHasilPeriksa, StatusEnabled, NoRec, KdKomponenPeriksa, HasilKomponenPeriksa):
+    engine.execute(
+        text(f"""INSERT INTO HasilPemeriksaan_T  (KdProfile, NoHasilPeriksa, NoCM, TglHasilPeriksa, StatusEnabled, NoRec)
+                VALUES ({KdProfile}, {NoHasilPeriksa}, '{NoCM}', '{TglHasilPeriksa}', {StatusEnabled}, '{NoRec}');""")
+    )
+    engine.execute(
+        text(f"""INSERT INTO HasilPemeriksaanD_T  (KdProfile, NoHasilPeriksa, KdKomponenPeriksa, TglHasilKomponenPeriksa, HasilKomponenPeriksa, StatusEnabled, NoRec)
+                VALUES ({KdProfile}, {NoHasilPeriksa}, {KdKomponenPeriksa}, '{TglHasilPeriksa}', '{HasilKomponenPeriksa}', {StatusEnabled}, '{NoRec}');""")
+    )
+
+def get_anamnesis(no_cm):
+    result = engine.execute(
+        text(f"""SELECT NamaKomponen, hp.TglHasilKomponenPeriksa, hp.HasilKomponenPeriksa
+                FROM HasilPemeriksaanD_T hp
+                JOIN Komponen_M km 
+                ON hp.KdKomponenPeriksa = km.KdKomponen
+                JOIN HasilPemeriksaan_T hpt 
+                ON hpt.NoHasilPeriksa = hp.NoHasilPeriksa
+                WHERE hpt.NoCM = {no_cm};""")
+    )
+    return result

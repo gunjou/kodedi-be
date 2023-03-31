@@ -3,7 +3,7 @@ import uuid
 from flask import Blueprint, request
 from flask_jwt_extended import jwt_required
 
-from api.query import get_list_patient, query_add_pasien, get_no_cm
+from api.query import get_list_patient, query_add_pasien, get_no_cm, query_add_komponen_anamnesis, get_master_komponen_anamnesis, get_anamnesis, get_no_periksa
 
 
 pasien_bp = Blueprint('api', __name__)
@@ -100,3 +100,30 @@ def add_pasien():
             no_verifikasi,
             no_rec)
         return {'status': "Success add patient"}
+
+@pasien_bp.route('/pasien/anamnesis', methods=['POST'])
+@jwt_required()
+def add_komponen_anamnesis():
+    komponen = request.json.get("komponen", None)
+    tgl_periksa = request.json.get("tgl_periksa", None)
+    kd_hasil = request.json.get("hasil", None)
+    hasil = get_master_komponen_anamnesis(kd_hasil).fetchone()[0]
+
+
+    kode_profile = 1
+    nomor_periksa = get_no_periksa().fetchall()[-1][0]
+    no_cm = '1'.zfill(15)
+    enable = 1
+    no_rec = uuid.uuid4()
+    print(tgl_periksa)
+    # KdProfile, NoHasilPeriksa, NoCM, TglHasilPeriksa, StatusEnabled, NoRec, KdKomponenPeriksa, HasilKomponenPeriksa
+    query_add_komponen_anamnesis(kode_profile, nomor_periksa + 1, no_cm, tgl_periksa, enable, no_rec, komponen, hasil)
+    return {'status': "Success add komponen"}
+
+@pasien_bp.route('/pasien/get-anamnesis', methods=['GET', 'POST'])
+@jwt_required()
+def get_komponen_anamnesis():
+    no_cm = request.json.get("patient", None)
+    komponen = get_anamnesis(no_cm)
+    result = [{'keluhan': i['NamaKomponen'], 'date': i['TglHasilKomponenPeriksa'].strftime('%d/%m/%Y'), 'detail': i['HasilKomponenPeriksa']} for i in komponen]
+    return result
