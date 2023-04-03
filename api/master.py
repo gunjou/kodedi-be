@@ -14,31 +14,31 @@ engine = get_connection()
 
 master_bp = Blueprint('api', __name__)
 
-@master_bp.route('/master/data-title', methods=['GET'])
+@master_bp.route('/api/master/data-title', methods=['GET'])
 def data_title():
     data = engine.execute(text(f"""SELECT KdTitle, NamaTitle FROM Title_M;"""))
     result = [{'id': row['KdTitle'], 'nama': row['NamaTitle']} for row in data]
     return result
 
-@master_bp.route('/master/data-jeniskelamin', methods=['GET'])
+@master_bp.route('/api/master/data-jeniskelamin', methods=['GET'])
 def data_jeniskelamin():
     data = engine.execute(text(f"""SELECT KdJenisKelamin, JenisKelamin FROM JenisKelamin_M;"""))
     result = [{'id': row['KdJenisKelamin'], 'jk': row['JenisKelamin']} for row in data]
     return result
 
-@master_bp.route('/master/data-negara', methods=['GET'])
+@master_bp.route('/api/master/data-negara', methods=['GET'])
 def data_negara():
     data = engine.execute(text(f"""SELECT KdNegara, NamaNegara FROM Negara_M;"""))
     result = [{'id': row['KdNegara'], 'negara': row['NamaNegara']} for row in data]
     return result
 
-@master_bp.route('/master/komponen-anamnesis', methods=['GET'])
+@master_bp.route('/api/master/komponen-anamnesis', methods=['GET'])
 def komponen_anamnesis():
     data = engine.execute(text(f"""SELECT KdKomponen, NamaKomponen, KdKomponenHead, NoUrut FROM Komponen_M WHERE KdKomponenHead = 1;"""))
     result = [{'id': row['KdKomponen'], 'no': row['NoUrut'], 'komponen': row['NamaKomponen'], 'kode_head': row['KdKomponenHead']} for row in data]
     return result
 
-@master_bp.route('/master/hasil-anamnesis', methods=['GET'])
+@master_bp.route('/api/master/hasil-anamnesis', methods=['GET'])
 def hasil_anamnesis():
     data = engine.execute(text(f"""SELECT KdKomponenHasil, NamaKomponenHasil, KdKomponenHasilHead, NoUrut FROM KomponenHasil_M WHERE KdKomponenHasilHead = 1;"""))
     result = [{'id': row['KdKomponenHasil'], 'no': row['NoUrut'], 'hasil': row['NamaKomponenHasil'], 'kode_head': row['KdKomponenHasilHead']} for row in data]

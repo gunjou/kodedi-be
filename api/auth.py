@@ -55,13 +55,13 @@ def login():
         }
     }
 
-@auth_bp.route('/auth/logout', methods=['GET'])
+@auth_bp.route('/api/auth/logout', methods=['GET'])
 def logout():
     response = jsonify({"message": "logout successful"})
     unset_jwt_cookies(response)
     return response
 
-@auth_bp.route('/auth/register', methods=['POST'])
+@auth_bp.route('/api/auth/register', methods=['POST'])
 def register():
     username = request.json.get("username", None)
     fullname = request.json.get("fullname", None).title()

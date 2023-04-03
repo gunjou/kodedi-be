@@ -17,7 +17,7 @@ def get_age(birthdate):
     days = (months - int(months)) * (365.242/12)
     return f"{int(years)}%{int(months)}%{int(days)}"
 
-@pasien_bp.route('/pasien/list', methods=['GET'])
+@pasien_bp.route('/api/pasien/list', methods=['GET'])
 @jwt_required()
 def list_pasien():
     data = get_list_patient()
@@ -33,7 +33,7 @@ def list_pasien():
         } for i in data]
     return result
 
-@pasien_bp.route('/pasien/count', methods=['GET'])
+@pasien_bp.route('/api/pasien/count', methods=['GET'])
 @jwt_required()
 def count_pasien():
     patients = get_list_patient().fetchall()
@@ -45,7 +45,7 @@ def count_pasien():
     }
     return result
 
-@pasien_bp.route('/pasien/status', methods=['GET'])
+@pasien_bp.route('/api/pasien/status', methods=['GET'])
 @jwt_required()
 def count_status():
     patients = get_list_patient().fetchall()
@@ -58,7 +58,7 @@ def count_status():
     }
     return result
 
-@pasien_bp.route('/pasien/tambah', methods=['GET', 'POST'])
+@pasien_bp.route('/api/pasien/tambah', methods=['GET', 'POST'])
 @jwt_required()
 def add_pasien():
     title = request.json.get("title", None)
@@ -101,7 +101,7 @@ def add_pasien():
             no_rec)
         return {'status': "Success add patient"}
 
-@pasien_bp.route('/pasien/anamnesis', methods=['POST'])
+@pasien_bp.route('/api/pasien/anamnesis', methods=['POST'])
 @jwt_required()
 def add_komponen_anamnesis():
     komponen = request.json.get("komponen", None)
@@ -120,7 +120,7 @@ def add_komponen_anamnesis():
     query_add_komponen_anamnesis(kode_profile, nomor_periksa + 1, no_cm, tgl_periksa, enable, no_rec, komponen, hasil)
     return {'status': "Success add komponen"}
 
-@pasien_bp.route('/pasien/get-anamnesis', methods=['GET', 'POST'])
+@pasien_bp.route('/api/pasien/get-anamnesis', methods=['GET', 'POST'])
 @jwt_required()
 def get_komponen_anamnesis():
     no_cm = request.json.get("patient", None)

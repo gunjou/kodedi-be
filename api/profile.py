@@ -6,7 +6,7 @@ from api.query import get_data_user
 
 profile_bp = Blueprint('api', __name__)
 
-@profile_bp.route('/users/profile', methods=['GET'])
+@profile_bp.route('/api/users/profile', methods=['GET'])
 @jwt_required()
 def my_profile():
     current_user = get_data_user(get_jwt_identity()).fetchall()[0]
