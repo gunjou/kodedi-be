@@ -3,8 +3,8 @@ from sqlalchemy import create_engine
 
 
 def get_connection():
-    server = 'bottis.id'
+    server = '192.168.1.249'
     database = 'Kodedi'
     username = 'sa'
     password = r'@DBJ4s4medik4@'
-    return create_engine(f'mssql+pymssql://{username}:%s@{server}:20000/{database}' % quote_plus(password))
+    return create_engine(f'mssql+pymssql://{username}:%s@{server}:1433/{database}' % quote_plus(password))
