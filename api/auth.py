@@ -26,7 +26,7 @@ def refresh_expiring_jwts(response):
     except(RuntimeError, KeyError):
         return response
 
-@auth_bp.route('/auth/login', methods=['GET', 'POST'])
+@auth_bp.route('/api/auth/login', methods=['GET', 'POST'])
 def login():
     username = request.json.get("username", None)
     password = request.json.get("password", None)

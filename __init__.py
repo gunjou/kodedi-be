@@ -23,4 +23,4 @@ from api.master import master_bp
 api.register_blueprint(master_bp, name='master')
 
 if __name__ == "__main__":
-    api.run()
+    api.run(host='0.0.0.0')
