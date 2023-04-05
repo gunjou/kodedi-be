@@ -31,17 +31,29 @@ def get_list_patient():
     )
     return result
 
-# def get_no_verif():
-#     result = engine.execute(
-#         text(f"""SELECT NoVerifikasi FROM Pasien_M WHERE = '230320%';""")
-#     )
-#     return result
+def get_detail_patient(no_cm):
+    result = engine.execute(
+        text(f"""SELECT * FROM Pasien_M WHERE NoCM = {no_cm};""")
+    )
+    return result
+
+def get_no_verif(no):
+    result = engine.execute(
+        text(f"""SELECT NoVerifikasi FROM StrukVerifikasi_T WHERE NoVerifikasi LIKE '{no}%';""")
+    )
+    return result
 
 def get_no_cm():
     result = engine.execute(
         text(f"""SELECT NoCM FROM Pasien_M;""")
     )
     return result
+
+def query_add_verifikasi(KdProfile, NoVerifikasi, TglVerifikasi, KodeVerifikasi, StatusEnabled, NoRec):
+    engine.execute(
+        text(f"""INSERT INTO StrukVerifikasi_T (KdProfile, NoVerifikasi, TglVerifikasi, KodeVerifikasi, StatusEnabled, NoRec)
+                VALUES ({KdProfile}, '{NoVerifikasi}', '{TglVerifikasi}', {KodeVerifikasi}, {StatusEnabled}, '{NoRec}');""")
+    )
 
 def query_add_pasien(KdProfile, NoCM, KdTitle, NamaLengkap, NamaKeluarga, NamaPanggilan, NamaDepan, NamaTengah, NamaBelakang, KdJenisKelamin, TglLahir, KdNegara, StatusEnabled, NoVerifikasi, NoRec):
     engine.execute(
@@ -79,4 +91,8 @@ def get_anamnesis(no_cm):
                 ON hpt.NoHasilPeriksa = hp.NoHasilPeriksa
                 WHERE hpt.NoCM = {no_cm};""")
     )
+    return result
+
+def get_master_anamnesis():
+    result = engine.execute(text("SELECT KdKomponen, NamaKomponen, ReportDisplay FROM Komponen_M WHERE StatusEnabled = 1 AND KdKomponenHead = 1;"))
     return result

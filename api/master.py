@@ -34,7 +34,7 @@ def data_negara():
 
 @master_bp.route('/api/master/komponen-anamnesis', methods=['GET'])
 def komponen_anamnesis():
-    data = engine.execute(text(f"""SELECT KdKomponen, NamaKomponen, KdKomponenHead, NoUrut FROM Komponen_M WHERE KdKomponenHead = 1;"""))
+    data = engine.execute(text(f"""SELECT KdKomponen, NamaKomponen, KdKomponenHead, NoUrut FROM Komponen_M WHERE StatusEnabled = 1 AND KdKomponenHead = 1;"""))
     result = [{'id': row['KdKomponen'], 'no': row['NoUrut'], 'komponen': row['NamaKomponen'], 'kode_head': row['KdKomponenHead']} for row in data]
     return result
 
