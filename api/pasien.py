@@ -1,4 +1,5 @@
 from datetime import date, datetime, timedelta
+import time
 from dateutil import parser
 import uuid
 from flask import Blueprint, request
@@ -40,8 +41,9 @@ def list_pasien():
             'age_y': get_age(i['TglLahir']).split('%')[0],
             'age_m': get_age(i['TglLahir']).split('%')[1],
             'age_d': get_age(i['TglLahir']).split('%')[2],
-            'status': i['StatusEnabled'],
+            'status': i['KodeVerifikasi'],
         } for i in data]
+    result = sorted(result, key=lambda d: d['no_cm'])
     return result
 
 @pasien_bp.route('/api/pasien/get-detail-patient', methods=['GET'])
@@ -56,7 +58,7 @@ def get_pasien():
             'age_y': get_age(i['TglLahir']).split('%')[0],
             'age_m': get_age(i['TglLahir']).split('%')[1],
             'age_d': get_age(i['TglLahir']).split('%')[2],
-            'status': i['StatusEnabled'],
+            'status': i['KodeVerifikasi'],
         } for i in data]
     return result
 
@@ -76,7 +78,7 @@ def count_pasien():
 @jwt_required()
 def count_status():
     patients = get_list_patient().fetchall()
-    patients = [i['StatusEnabled'] for i in patients]
+    patients = [i['KodeVerifikasi'] for i in patients]
     result = {
         'antri': patients.count(1),
         'proses': patients.count(2),
@@ -135,21 +137,35 @@ def add_pasien():
 @pasien_bp.route('/api/pasien/anamnesis', methods=['POST'])
 @jwt_required()
 def add_komponen_anamnesis():
-    patient = request.json.get("patient", None)
+    NoCM = request.json.get("patient", None)
     keluhan = request.json.get("keluhan", None)
     tgl_periksa = request.json.get("tgl_periksa", None)
     komponen = get_master_anamnesis()
     komponen = [i['KdKomponen'] for i in komponen]
-    print(komponen)
+    now = datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
+    TglHasilPeriksa = now[:-3]#tgl_periksa
+    
+    StatusEnabled = 1
+    KdProfile = 1
+    NoHasilPeriksa = 1 #get_no_periksa().fetchall()[-1][0]
+    try:
+        no_verif_tmp = get_no_verif(date.today().strftime('%y%m%d')).fetchall()[-1]['NoVerifikasi']
+    except:
+        no_verif_tmp = '0000'
+    no_verif_tmp = int(no_verif_tmp[-4:])
+    no_verifikasi = date.today().strftime('%y%m%d') + str(no_verif_tmp + 1).zfill(4)
 
-    kode_profile = 1
-    nomor_periksa = 1#get_no_periksa().fetchall()[-1][0]
-    no_cm = patient
-    enable = 1
-    no_rec = uuid.uuid4()
-    print(parser.parse(tgl_periksa) + timedelta(days=1))
-    # KdProfile, NoHasilPeriksa, NoCM, TglHasilPeriksa, StatusEnabled, NoRec, KdKomponenPeriksa, HasilKomponenPeriksa
-    # query_add_komponen_anamnesis(kode_profile, nomor_periksa + 1, no_cm, tgl_periksa, enable, no_rec, komponen, hasil)
+    add_verification(no_verifikasi, 2)
+    for i in komponen:
+        time.sleep(1)
+        NoRec = uuid.uuid4()
+        KdKomponenPeriksa = i
+        HasilKomponenPeriksa = 0
+        for j in keluhan:
+            if i == j:
+                HasilKomponenPeriksa = 1
+        query_add_komponen_anamnesis(KdProfile, NoHasilPeriksa, NoCM, TglHasilPeriksa, StatusEnabled, NoRec, KdKomponenPeriksa, HasilKomponenPeriksa, no_verifikasi)
+    
     return {'status': "Success add komponen"}
 
 @pasien_bp.route('/api/pasien/get-anamnesis', methods=['GET', 'POST'])

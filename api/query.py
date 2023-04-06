@@ -27,7 +27,8 @@ def get_data_user(no_rec):
 
 def get_list_patient():
     result = engine.execute(
-        text(f"""SELECT * FROM Pasien_M;""")
+        # text(f"""SELECT * FROM Pasien_M;""")
+        text(f"""SELECT pm.*, svt.KodeVerifikasi FROM Pasien_M pm JOIN StrukVerifikasi_T svt ON pm.NoVerifikasi = svt.NoVerifikasi WHERE pm.StatusEnabled = 1 AND svt.StatusEnabled = 1;""")
     )
     return result
 
@@ -71,7 +72,7 @@ def get_master_komponen_anamnesis(KdKomponen):
     )
     return result
 
-def query_add_komponen_anamnesis(KdProfile, NoHasilPeriksa, NoCM, TglHasilPeriksa, StatusEnabled, NoRec, KdKomponenPeriksa, HasilKomponenPeriksa):
+def query_add_komponen_anamnesis(KdProfile, NoHasilPeriksa, NoCM, TglHasilPeriksa, StatusEnabled, NoRec, KdKomponenPeriksa, HasilKomponenPeriksa, no_verif):
     engine.execute(
         text(f"""INSERT INTO HasilPemeriksaan_T  (KdProfile, NoHasilPeriksa, NoCM, TglHasilPeriksa, StatusEnabled, NoRec)
                 VALUES ({KdProfile}, {NoHasilPeriksa}, '{NoCM}', '{TglHasilPeriksa}', {StatusEnabled}, '{NoRec}');""")
@@ -80,6 +81,7 @@ def query_add_komponen_anamnesis(KdProfile, NoHasilPeriksa, NoCM, TglHasilPeriks
         text(f"""INSERT INTO HasilPemeriksaanD_T  (KdProfile, NoHasilPeriksa, KdKomponenPeriksa, TglHasilKomponenPeriksa, HasilKomponenPeriksa, StatusEnabled, NoRec)
                 VALUES ({KdProfile}, {NoHasilPeriksa}, {KdKomponenPeriksa}, '{TglHasilPeriksa}', '{HasilKomponenPeriksa}', {StatusEnabled}, '{NoRec}');""")
     )
+    engine.execute(text(f"UPDATE Pasien_M SET NoVerifikasi = {no_verif} WHERE NoCM = {NoCM}"))
 
 def get_anamnesis(no_cm):
     result = engine.execute(
