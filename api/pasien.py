@@ -5,7 +5,7 @@ import uuid
 from flask import Blueprint, request
 from flask_jwt_extended import jwt_required
 
-from api.query import get_list_patient, query_add_pasien, get_no_cm, query_add_komponen_anamnesis, get_master_komponen_anamnesis, get_anamnesis, get_no_periksa, query_add_verifikasi, get_no_verif, get_master_anamnesis
+from api.query import get_list_patient, query_add_detail_hasil_periksa, query_add_hasil_periksa, query_add_pasien, get_no_cm, get_anamnesis, query_add_verifikasi, get_no_verif, get_master_anamnesis
 
 
 pasien_bp = Blueprint('api', __name__)
@@ -154,7 +154,8 @@ def add_komponen_anamnesis():
         no_verif_tmp = '0000'
     no_verif_tmp = int(no_verif_tmp[-4:])
     no_verifikasi = date.today().strftime('%y%m%d') + str(no_verif_tmp + 1).zfill(4)
-
+    k = 0
+    query_add_hasil_periksa(KdProfile, NoHasilPeriksa, NoCM, TglHasilPeriksa, StatusEnabled, uuid.uuid4(), no_verifikasi)
     add_verification(no_verifikasi, 2)
     for i in komponen:
         time.sleep(1)
@@ -164,7 +165,7 @@ def add_komponen_anamnesis():
         for j in keluhan:
             if i == j:
                 HasilKomponenPeriksa = 1
-        query_add_komponen_anamnesis(KdProfile, NoHasilPeriksa, NoCM, TglHasilPeriksa, StatusEnabled, NoRec, KdKomponenPeriksa, HasilKomponenPeriksa, no_verifikasi)
+        query_add_detail_hasil_periksa(KdProfile, NoHasilPeriksa, TglHasilPeriksa, StatusEnabled, NoRec, KdKomponenPeriksa, HasilKomponenPeriksa)
     
     return {'status': "Success add komponen"}
 

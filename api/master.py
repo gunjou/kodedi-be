@@ -43,3 +43,12 @@ def hasil_anamnesis():
     data = engine.execute(text(f"""SELECT KdKomponenHasil, NamaKomponenHasil, KdKomponenHasilHead, NoUrut FROM KomponenHasil_M WHERE KdKomponenHasilHead = 1;"""))
     result = [{'id': row['KdKomponenHasil'], 'no': row['NoUrut'], 'hasil': row['NamaKomponenHasil'], 'kode_head': row['KdKomponenHasilHead']} for row in data]
     return result
+
+@master_bp.route('/api/master/tanda-vital', methods=['GET'])
+def master_tanda_vital():
+    data = engine.execute(
+        text(f"""SELECT k.KdKomponen, k.NamaKomponen, k.KdKomponenHead, k.NoUrut, s.KdSatuanHasil, s.SatuanHasil
+                FROM Komponen_M k FULL OUTER JOIN SatuanHasil_M s ON k.KdSatuanHasil = s.KdSatuanHasil
+                WHERE k.StatusEnabled = 1 AND k.KdKomponenHead = 2;"""))
+    result = [{'id': row['KdKomponen'], 'no': row['NoUrut'], 'komponen': row['NamaKomponen'], 'kode_head': row['KdKomponenHead'], 'kode_satuan': row['KdSatuanHasil'], 'satuan': row['SatuanHasil']} for row in data]
+    return result

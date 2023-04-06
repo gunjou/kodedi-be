@@ -72,16 +72,19 @@ def get_master_komponen_anamnesis(KdKomponen):
     )
     return result
 
-def query_add_komponen_anamnesis(KdProfile, NoHasilPeriksa, NoCM, TglHasilPeriksa, StatusEnabled, NoRec, KdKomponenPeriksa, HasilKomponenPeriksa, no_verif):
+def query_add_hasil_periksa(KdProfile, NoHasilPeriksa, NoCM, TglHasilPeriksa, StatusEnabled, NoRec, no_verif):
     engine.execute(
         text(f"""INSERT INTO HasilPemeriksaan_T  (KdProfile, NoHasilPeriksa, NoCM, TglHasilPeriksa, StatusEnabled, NoRec)
                 VALUES ({KdProfile}, {NoHasilPeriksa}, '{NoCM}', '{TglHasilPeriksa}', {StatusEnabled}, '{NoRec}');""")
     )
+    engine.execute(text(f"UPDATE Pasien_M SET NoVerifikasi = {no_verif} WHERE NoCM = {NoCM}"))
+    
+
+def query_add_detail_hasil_periksa(KdProfile, NoHasilPeriksa, TglHasilPeriksa, StatusEnabled, NoRec, KdKomponenPeriksa, HasilKomponenPeriksa):
     engine.execute(
         text(f"""INSERT INTO HasilPemeriksaanD_T  (KdProfile, NoHasilPeriksa, KdKomponenPeriksa, TglHasilKomponenPeriksa, HasilKomponenPeriksa, StatusEnabled, NoRec)
                 VALUES ({KdProfile}, {NoHasilPeriksa}, {KdKomponenPeriksa}, '{TglHasilPeriksa}', '{HasilKomponenPeriksa}', {StatusEnabled}, '{NoRec}');""")
     )
-    engine.execute(text(f"UPDATE Pasien_M SET NoVerifikasi = {no_verif} WHERE NoCM = {NoCM}"))
 
 def get_anamnesis(no_cm):
     result = engine.execute(
