@@ -62,6 +62,9 @@ def query_add_pasien(KdProfile, NoCM, KdTitle, NamaLengkap, NamaKeluarga, NamaPa
                 VALUES ({KdProfile}, '{NoCM}', {KdTitle}, '{NamaLengkap}', '{NamaKeluarga}', '{NamaPanggilan}', '{NamaDepan}', '{NamaTengah}', '{NamaBelakang}', {KdJenisKelamin}, '{TglLahir}', {KdNegara}, {StatusEnabled}, {NoVerifikasi}, '{NoRec}');""")
     )
 
+def query_delete_patient(NoCM):
+    engine.execute(text(f"UPDATE Pasien_M  SET StatusEnabled = 0 WHERE NoCM = '{NoCM}';"))
+
 def get_no_periksa():
     result = engine.execute(text(f'SELECT NoHasilPeriksa FROM HasilPemeriksaan_T;'))
     return result
@@ -94,10 +97,22 @@ def get_anamnesis(no_cm):
                 ON hp.KdKomponenPeriksa = km.KdKomponen
                 JOIN HasilPemeriksaan_T hpt 
                 ON hpt.NoHasilPeriksa = hp.NoHasilPeriksa
-                WHERE hpt.NoCM = {no_cm};""")
+                WHERE hpt.NoCM = {no_cm} AND km.KdKomponen < 31""")
     )
     return result
 
 def get_master_anamnesis():
     result = engine.execute(text("SELECT KdKomponen, NamaKomponen, ReportDisplay FROM Komponen_M WHERE StatusEnabled = 1 AND KdKomponenHead = 1;"))
+    return result
+
+def get_tanda_vital(no_cm):
+    result = engine.execute(
+        text(f"""SELECT NamaKomponen, hp.TglHasilKomponenPeriksa, hp.HasilKomponenPeriksa
+                FROM HasilPemeriksaanD_T hp
+                JOIN Komponen_M km 
+                ON hp.KdKomponenPeriksa = km.KdKomponen
+                JOIN HasilPemeriksaan_T hpt 
+                ON hpt.NoHasilPeriksa = hp.NoHasilPeriksa
+                WHERE hpt.NoCM = {no_cm} AND km.KdKomponen > 30 AND km.KdKomponen < 38;""")
+    )
     return result
