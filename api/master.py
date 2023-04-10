@@ -52,3 +52,19 @@ def master_tanda_vital():
                 WHERE k.StatusEnabled = 1 AND k.KdKomponenHead = 2;"""))
     result = [{'id': row['KdKomponen'], 'no': row['NoUrut'], 'komponen': row['NamaKomponen'], 'kode_head': row['KdKomponenHead'], 'kode_satuan': row['KdSatuanHasil'], 'satuan': row['SatuanHasil']} for row in data]
     return result
+
+@master_bp.route('/api/master/laboratorium-node', methods=['GET'])
+def master_node_laboratorium():
+    data = engine.execute(
+        text(f"""SELECT * FROM Komponen_M WHERE StatusEnabled = 1 AND KdKomponenHead = 3;"""))
+    result = [{'id': row['KdKomponen'], 'no': row['NoUrut'], 'komponen': row['NamaKomponen'], 'kode_head': row['KdKomponenHead']} for row in data]
+    return result
+
+@master_bp.route('/api/master/laboratorium', methods=['GET'])
+def master_laboratorium():
+    data = engine.execute(
+        text(f"""SELECT * FROM Komponen_M k 
+                FULL OUTER JOIN SatuanHasil_M s ON k.KdSatuanHasil = s.KdSatuanHasil 
+                WHERE k.StatusEnabled = 1 AND k.KdKomponenHead != 1 AND k.KdKomponenHead != 2 AND k.KdKomponenHead != 3;"""))
+    result = [{'id': row['KdKomponen'], 'no': row['NoUrut'], 'komponen': row['NamaKomponen'], 'hasil_periksa': None, 'nilai_normal': row['NilaiNormal'], 'kode_head': row['KdKomponenHead'], 'kode_satuan': row['KdSatuanHasil'], 'satuan': row['SatuanHasil']} for row in data]
+    return result
