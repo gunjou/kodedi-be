@@ -1,6 +1,5 @@
 from datetime import date, datetime, timedelta
 import time
-from dateutil import parser
 import uuid
 from flask import Blueprint, request
 from flask_jwt_extended import jwt_required
