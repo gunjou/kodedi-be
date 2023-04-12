@@ -143,7 +143,7 @@ def add_komponen_anamnesis():
     StatusEnabled = 1
     KdProfile = 1
     try:
-        NoHasilPeriksa = get_no_periksa().fetchall()[-1][0]
+        NoHasilPeriksa = get_no_periksa().fetchall()[-1][0] + 1
     except:
         NoHasilPeriksa = 1
     try:
