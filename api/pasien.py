@@ -193,7 +193,7 @@ def add_komponen_tanda_vital():
 
     StatusEnabled = 1
     KdProfile = 1
-    NoHasilPeriksa = get_no_periksa().fetchall()[-1][0]
+    NoHasilPeriksa = get_no_periksa().fetchall()[-1][0] + 1
     try:
         no_verif_tmp = get_no_verif(date.today().strftime('%y%m%d')).fetchall()[-1]['NoVerifikasi']
     except:
