@@ -98,9 +98,9 @@ def add_pasien():
     nationality = 1
     try:
         no_cm_tmp = get_no_cm().fetchall()[-1]
+        no_cm = str(int(no_cm_tmp['NoCM']) + 1).zfill(15)
     except:
-        no_cm_tmp = 1
-    no_cm = str(int(no_cm_tmp['NoCM']) + 1).zfill(15)
+        no_cm = str(1).zfill(15)
     tmp_name = fullname.split(' ')
     familyname = tmp_name[-1]
     surename = tmp_name[0]
