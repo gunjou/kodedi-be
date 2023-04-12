@@ -101,12 +101,6 @@ def add_pasien():
         no_cm = str(int(no_cm_tmp['NoCM']) + 1).zfill(15)
     except:
         no_cm = str(1).zfill(15)
-    tmp_name = fullname.split(' ')
-    familyname = tmp_name[-1]
-    surename = tmp_name[0]
-    frontname = tmp_name[0]
-    middlename = tmp_name[1]
-    backname = tmp_name[-1]
     profile = 1
     status = 1
     try:
@@ -127,11 +121,6 @@ def add_pasien():
             no_cm,
             title,
             fullname,
-            familyname,
-            surename,
-            frontname,
-            middlename,
-            backname,
             gender,
             birth_date,
             nationality,

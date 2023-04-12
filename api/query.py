@@ -56,10 +56,10 @@ def query_add_verifikasi(KdProfile, NoVerifikasi, TglVerifikasi, KodeVerifikasi,
                 VALUES ({KdProfile}, '{NoVerifikasi}', '{TglVerifikasi}', {KodeVerifikasi}, {StatusEnabled}, '{NoRec}');""")
     )
 
-def query_add_pasien(KdProfile, NoCM, KdTitle, NamaLengkap, NamaKeluarga, NamaPanggilan, NamaDepan, NamaTengah, NamaBelakang, KdJenisKelamin, TglLahir, KdNegara, StatusEnabled, NoVerifikasi, NoRec):
+def query_add_pasien(KdProfile, NoCM, KdTitle, NamaLengkap, KdJenisKelamin, TglLahir, KdNegara, StatusEnabled, NoVerifikasi, NoRec):
     engine.execute(
-        text(f"""INSERT INTO Pasien_M  (KdProfile, NoCM, KdTitle, NamaLengkap, NamaKeluarga, NamaPanggilan, NamaDepan, NamaTengah, NamaBelakang, KdJenisKelamin, TglLahir, KdNegara, StatusEnabled, NoVerifikasi, NoRec)
-                VALUES ({KdProfile}, '{NoCM}', {KdTitle}, '{NamaLengkap}', '{NamaKeluarga}', '{NamaPanggilan}', '{NamaDepan}', '{NamaTengah}', '{NamaBelakang}', {KdJenisKelamin}, '{TglLahir}', {KdNegara}, {StatusEnabled}, {NoVerifikasi}, '{NoRec}');""")
+        text(f"""INSERT INTO Pasien_M  (KdProfile, NoCM, KdTitle, NamaLengkap, KdJenisKelamin, TglLahir, KdNegara, StatusEnabled, NoVerifikasi, NoRec)
+                VALUES ({KdProfile}, '{NoCM}', {KdTitle}, '{NamaLengkap}', {KdJenisKelamin}, '{TglLahir}', {KdNegara}, {StatusEnabled}, {NoVerifikasi}, '{NoRec}');""")
     )
 
 def query_delete_patient(NoCM):
