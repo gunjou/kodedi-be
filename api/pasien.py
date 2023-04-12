@@ -109,8 +109,12 @@ def add_pasien():
     backname = tmp_name[-1]
     profile = 1
     status = 1
-    no_verif_tmp = get_no_verif(date.today().strftime('%y%m%d')).fetchall()[-1]['NoVerifikasi']
-    no_verif_tmp = int(no_verif_tmp[-4:])
+    try:
+        no_verif_tmp = get_no_verif(date.today().strftime('%y%m%d')).fetchall()[-1]['NoVerifikasi']
+        no_verif_tmp = int(no_verif_tmp[-4:])
+    except:
+        no_verif_tmp = 0
+
     no_verifikasi = date.today().strftime('%y%m%d') + str(no_verif_tmp + 1).zfill(4)
     no_rec = uuid.uuid4()
     
